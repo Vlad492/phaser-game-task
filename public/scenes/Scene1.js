@@ -132,7 +132,6 @@ class Scene1 extends Phaser.Scene {
             this.createRectText()
             this.createConfirmButton()
         }
-
         this.input.keyboard.on('keydown_RIGHT', this.goingRight, this)
         this.input.keyboard.on('keydown_LEFT', this.goingLeft, this)
     }
@@ -146,7 +145,7 @@ class Scene1 extends Phaser.Scene {
     }
 
     create() {
-        if (tasks.length === completedTasks.length) {//if all tasks is completed -> changing scene
+        if (tasks.length === completedTasks.length) {//if all tasks is completed --> changing scene
             this.sceneShange()
         } else {
             this.setBackground()

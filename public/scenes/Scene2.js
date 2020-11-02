@@ -35,7 +35,7 @@ class Scene2 extends Phaser.Scene {
         }
         this.rect_params.x = (window.innerWidth / 2) - (this.rect_params.width / 2)
     }
-    preload() {
+    preload() {//load config from 1-st scene 
         console.log(completedTasks)
         this.load.image('body', bodyConfig[completedTasks[0].key]);
         this.load.image('hair', bodyConfig[completedTasks[1].key]);
@@ -107,16 +107,19 @@ class Scene2 extends Phaser.Scene {
         this.add.text(this.rect_params.x + this.rect_params.width / 2, this.rect_params.y - 15, string, { fixedWidth: this.rect_params.width / 3 - 10, align: 'center', fontSize: 30 })
     }
     createMainText(string) {
-        let text = this.add.text(this.rect_params.x + 20, this.rect_params.y + 50, string, { fixedWidth: this.rect_params.width, align: 'left', fontSize: 20, color: '#000000',wordWrap: true, wordWrapWidth: 300 },)
+        let text = this.add.text(this.rect_params.x + 20, this.rect_params.y + 50, string, { fixedWidth: this.rect_params.width, align: 'left', fontSize: 20, color: '#000000', wordWrap: true, wordWrapWidth: 300 },)
     }
-    mainHero(emotion) {
-        if(this.body){
+    speakerDestroy() {//remove previous speaker
+        if (this.body) {
             this.body.destroy()
             this.eclipse.destroy()
             this.emotion.destroy()
             this.hair.destroy()
             this.clothes.destroy()
         }
+    }
+    mainHero(emotion) {//show left speaker on screen
+        this.speakerDestroy()
         this.eclipse = this.add.image(this.rect_params.x + 100, this.rect_params.y - 75, `${emotion}Eclipse`)
         this.eclipse.setScale(0.35, 0.35);
         this.body = this.add.image(this.rect_params.x + 100, this.rect_params.y - 75, 'body')
@@ -128,14 +131,8 @@ class Scene2 extends Phaser.Scene {
         this.clothes = this.add.image(this.rect_params.x + 100, this.rect_params.y - 75, 'clothes')
         this.clothes.setScale(0.35, 0.35);
     }
-    speaker(emotion) {
-        if(this.body){
-            this.body.destroy()
-            this.eclipse.destroy()
-            this.emotion.destroy()
-            this.hair.destroy()
-            this.clothes.destroy()
-        }
+    speaker(emotion) {//show right speaker on screen
+        this.speakerDestroy()
         this.eclipse = this.add.image(this.rect_params.x + this.rect_params.width - 100, this.rect_params.y - 75, 'angryEclipse')
         this.eclipse.setScale(-0.35, 0.35);
         this.body = this.add.image(this.rect_params.x + this.rect_params.width - 100, this.rect_params.y - 75, 'man_body')
@@ -145,26 +142,18 @@ class Scene2 extends Phaser.Scene {
         this.clothes = this.add.image(this.rect_params.x + this.rect_params.width - 100, this.rect_params.y - 75, 'man_clothes')
         this.clothes.setScale(-0.35, 0.35);
     }
-
-
-
-
-    showMainHero() {
-
-    }
-
     create() {
         this.jsonArr = this.cache.json.get('json');
         console.log(this.jsonArr)
         this.setBackground()
         this.setHomeButton()
         let i = 0
-        this.interval = setInterval(()=>{
-            if(i>=this.jsonArr.length-1){
+        this.interval = setInterval(() => {
+            if (i >= this.jsonArr.length - 1) {
                 clearInterval(this.interval)
             }
-            if(this.jsonArr[i].character === undefined){
-                if(this.body){
+            if (this.jsonArr[i].character === undefined) {
+                if (this.body) {
                     this.body.destroy()
                     this.emotion.destroy()
                     this.eclipse.destroy()
@@ -176,28 +165,20 @@ class Scene2 extends Phaser.Scene {
                 this.createNameRect()
                 this.createHeaderText('Nobody')
                 this.createMainText(this.jsonArr[i].text || '')
-            }else if(this.jsonArr[i].character === 'MAINHERO'){
+            } else if (this.jsonArr[i].character === 'MAINHERO') {
                 this.mainHero(this.jsonArr[i].emotion)
                 this.createMainRect()
                 this.createNameRect()
                 this.createHeaderText('MAINHERO')
                 this.createMainText(this.jsonArr[i].text || '')
-            }else if(this.jsonArr[i].character === 'Russell'){
+            } else if (this.jsonArr[i].character === 'Russell') {
                 this.speaker(this.jsonArr[i].emotion)
                 this.createMainRect()
                 this.createNameRect()
                 this.createHeaderText('Russell')
                 this.createMainText(this.jsonArr[i].text || '')
             }
-
-
-
-
             i++
-        },1000)
-
-
-
+        }, 1000)
     }
-
 }
